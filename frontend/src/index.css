@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  
+  /* Primary Agriculture Theme Colors */
+  --color-primary-green: #2E7D32;
+  --color-secondary-green: #66BB6A;
+  --color-accent-blue: #42A5F5;
+  --color-accent-brown: #8D6E63;
+  --color-bg-light: #F5F5F5;
+  --color-card-white: #FFFFFF;
+
+  /* Legacy for compatibility or extended palette */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-slate-900 bg-bg-light overflow-x-hidden;
+  }
+  
+  /* Dark mode styles */
+  .dark {
+    @apply text-slate-100 bg-slate-950;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom selection */
+::selection {
+  background-color: #d1fae5;
+  color: #064e3b;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

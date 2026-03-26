@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  role      String?  @default("farmer") // farmer, researcher, admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  identities      UserIdentity[]
+  predictions     Prediction[]
+  diseaseReports  DiseaseReport[]
+}
+
+model UserIdentity {
+  id          String   @id @default(cuid())
+  userId      String
+  provider    String
+  providerId  String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isDeleted   Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerId])
+}
+
+model Otp {
+  id         String   @id @default(cuid())
+  identifier String
+  type       String
+  otp        String
+  expiresAt  DateTime
+  attempts   Int      @default(0)
+  verified   Boolean  @default(false)
+  purpose    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isDeleted  Boolean  @default(false)
+}
+
+model Prediction {
+  id                String   @id @default(cuid())
+  userId            String?
+  nitrogen          Float
+  phosphorus        Float
+  potassium         Float
+  temperature       Float
+  humidity          Float
+  ph                Float
+  rainfall          Float
+  
+  resultCrop        String
+  confidence        Float
+  yieldEstimation   Float
+  profitEstimation  Float
+  rotationSuggestion String?
+  fertilizerTips    String? // Stored as JSON string
+  irrigationRecommendation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model DiseaseReport {
+  id              String   @id @default(cuid())
+  userId          String?
+  imageUrl        String
+  diseaseName     String
+  confidence      Float
+  treatment       String?
+  recommendations String? // Stored as JSON string
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model MarketPrice {
+  id        String   @id @default(cuid())
+  cropName  String
+  mandi     String
+  price     Float
+  trend     String   @default("STABLE") // UP, DOWN, STABLE
+  date      DateTime @default(now())
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+}
+
+model WeatherAlert {
+  id        String   @id @default(cuid())
+  type      String   // RAIN, DROUGHT, FROST, SOWING
+  severity  String   // LOW, MEDIUM, HIGH
+  message   String
+  location  String?
+  date      DateTime @default(now())
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+}
